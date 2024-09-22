@@ -17,7 +17,7 @@ def preprocess(image, input_layer):
 
 def predict_image(image, conf_threshold):
     input_image = preprocess(image, input_layer)
-    boxes = compiled_model([input_image])[output_layer_ir]
+    boxes = compiled_model([input_image])[output_layer]
     boxes = boxes[~np.all(boxes == 0, axis=1)]
     return boxes
 
