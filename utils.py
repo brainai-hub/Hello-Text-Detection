@@ -21,7 +21,7 @@ def predict_image(image, conf_threshold):
     boxes = boxes[~np.all(boxes == 0, axis=1)]
     return boxes, resized_image
 
-def convert_result_to_image(image, resized_image, boxes, threshold=0.3, conf_labels=True):
+def convert_result_to_image(bgr_image, resized_image, boxes, threshold=0.3, conf_labels=True):
     # Define colors for boxes and descriptions.
     colors = {"red": (255, 0, 0), "green": (0, 255, 0)}
     # Fetch the image shapes to calculate a ratio.
