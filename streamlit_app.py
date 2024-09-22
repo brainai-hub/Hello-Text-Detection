@@ -41,18 +41,17 @@ def play_video(video_source):
     fps = camera.get(cv2.CAP_PROP_FPS)
     temp_file_2 = tempfile.NamedTemporaryFile(delete=False,suffix='.mp4')
     video_row=[]
-
     # frame
     total_frames = int(camera.get(cv2.CAP_PROP_FRAME_COUNT))
     progress_bar = st.progress(0)
     frame_count = 0
-    
     st_frame = st.empty()
     while(camera.isOpened()):
         ret, frame = camera.read()
         if ret:
             try:
-                visualized_image = utils.predict_image(frame, conf_threshold)
+                boxes, resized_image = utils.predict_image(frame, conf_threshold)
+                visualized_image = utils.convert_result_to_image(frame, resized_image, boxes, conf_labels=False)
             except:
                 visualized_image = frame
             st_frame.image(visualized_image, channels = "BGR")
@@ -104,11 +103,3 @@ if source_radio == "WEBCAM":
         st.sidebar.write(f"Webcam image size: {width} x {height} pixels")
     else:
         st.sidebar.error("No image captured from webcam.")
-
-
-
-
-    clip = mpy.ImageSequenceClip(video_row, fps = fps)
-    clip.write_videofile(temp_file_2.name)
-    
-    st.video(temp_file_2.name)
