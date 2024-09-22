@@ -86,22 +86,6 @@ if source_radio == "VIDEO":
         st.write("Click on 'Browse Files' in the sidebar to run inference on a video.")
 
 if source_radio == "WEBCAM":
-    st.sidebar.header("My Webcam Test")
-    image = camera_input_live()
-    # Ensure the image is valid
-    if image is not None:
-        uploaded_image = PIL.Image.open(image)
-        uploaded_image_cv = cv2.cvtColor(numpy.array(uploaded_image), cv2.COLOR_RGB2BGR)
-        # Display the webcam image
-        st.image(uploaded_image_cv, channels="BGR")  
-        # Get the image dimensions
-        height, width, _ = uploaded_image_cv.shape
-        # Display the dimensions in the sidebar
-        st.sidebar.write(f"Webcam image size: {width} x {height} pixels")
-    else:
-        st.sidebar.error("No image captured from webcam.")
-
-if source_radio == "WEBCAM":
     input = camera_input_live()
     uploaded_image = Image.open(input)
     uploaded_image_cv = cv2.cvtColor(numpy.array(uploaded_image), cv2.COLOR_RGB2BGR)
