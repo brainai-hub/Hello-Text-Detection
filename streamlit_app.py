@@ -39,54 +39,36 @@ if source_radio == "IMAGE":
 def play_video(video_source):
     camera = cv2.VideoCapture(video_source)
     fps = camera.get(cv2.CAP_PROP_FPS)
-    temp_file_2 = tempfile.NamedTemporaryFile(delete=False, suffix='.mp4')
-    video_row = []
-    
+    temp_file_2 = tempfile.NamedTemporaryFile(delete=False,suffix='.mp4')
+    video_row=[]
+
+    # frame
     total_frames = int(camera.get(cv2.CAP_PROP_FRAME_COUNT))
     progress_bar = st.progress(0)
     frame_count = 0
-    st_frame = st.empty()
     
-    while camera.isOpened():
+    st_frame = st.empty()
+    while(camera.isOpened()):
         ret, frame = camera.read()
         if ret:
             try:
                 visualized_image = utils.predict_image(frame, conf_threshold)
-
-                # visualized_image가 None인지 확인
-                if visualized_image is None:
-                    st.error("Predicted image is None.")
-                    visualized_image = frame  # 대체 이미지 사용
-                
-                # NumPy 배열인지 확인
-                elif not isinstance(visualized_image, np.ndarray):
-                    st.error("Predicted image is not a valid NumPy array.")
-                    visualized_image = frame  # 대체 이미지 사용
-
-                # 데이터 형태 확인
-                else:
-                    st.write(f"Visualized image shape: {visualized_image.shape}")
-
-                # BGR -> RGB로 변환 후 [0, 1] 범위로 맞춤
-                if isinstance(visualized_image, np.ndarray) and visualized_image.size > 0:
-                    visualized_image = cv2.cvtColor(visualized_image, cv2.COLOR_BGR2RGB) / 255.0
-                else:
-                    st.error("Visualized image is not a valid size.")
-                # Streamlit에 이미지 표시
-                st_frame.image(visualized_image)
-                # 비디오 행렬에 변환된 프레임 추가
-                video_row.append(visualized_image) 
-                # 진행 상황 표시
-                frame_count += 1
-                progress_bar.progress(frame_count / total_frames, text=None)
-            except Exception as e:
-                st.error(f"An error occurred: {e}")
-                visualized_image = frame  # 기본 프레임 사용
+            except:
+                visualized_image = frame
+            st_frame.image(visualized_image, channels = "BGR")
+            video_row.append(cv2.cvtColor(visualized_image,cv2.COLOR_BGR2RGB))
+            frame_count +=1 
+            progress_bar.progress(frame_count/total_frames, text=None)
+    
         else:
             progress_bar.empty()
             camera.release()
             st_frame.empty()
             break
+    clip = mpy.ImageSequenceClip(video_row, fps = fps)
+    clip.write_videofile(temp_file_2.name)
+    st.video(temp_file_2.name)
+
 
 # 파일 업로드 처리
 temporary_location = None
