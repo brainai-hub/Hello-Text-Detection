@@ -6,11 +6,11 @@ from pathlib import Path
 core = ov.Core()
 model = core.read_model(model='./model/horizontal-text-detection-0001.xml')
 compiled_model = core.compile_model(model = model, device_name="CPU")
-input_layer_ir = compiled_model.input(0)
-output_layer_ir = compiled_model.output("boxes")
+input_layer = compiled_model.input(0)
+output_layer = compiled_model.output("boxes")
 
 def preprocess(image, input_layer):
-    N, C, H, W = input_layer_ir.shape
+    N, C, H, W = input_layer.shape
     resized_image = cv2.resize(image, (W, H))
     input_image = np.expand_dims(resized_image.transpose(2, 0, 1), 0)
     return input_image 
