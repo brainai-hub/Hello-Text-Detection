@@ -14,7 +14,7 @@ st.set_page_config(
 st.title("Hello Text Dection :sun_with_face:")
 
 st.sidebar.header("Type")
-source_radio = st.sidebar.radio("Select Source", ["IMAGE", "WEBCAM"])
+source_radio = st.sidebar.radio("Select Source", ["IMAGE", "VIDEO" "WEBCAM"])
 
 st.sidebar.header("Confidence")
 conf_threshold = float(st.sidebar.slider("Select the Confidence Threshold", 10, 100, 20))/100
@@ -77,3 +77,43 @@ if source_radio == "WEBCAM":
         st.sidebar.write(f"Webcam image size: {width} x {height} pixels")
     else:
         st.sidebar.error("No image captured from webcam.")
+
+
+def play_video(video_source):
+    camera = cv2.VideoCapture(video_source)
+    fps = camera.get(cv2.CAP_PROP_FPS)
+ 
+    temp_file_2 = tempfile.NamedTemporaryFile(delete=False,suffix='.mp4')
+    video_row=[]
+
+    # frame
+    total_frames = int(camera.get(cv2.CAP_PROP_FRAME_COUNT))
+    progress_bar = st.progress(0)
+    frame_count = 0
+    
+    st_frame = st.empty()
+    
+    while(camera.isOpened()):
+        ret, frame = camera.read()
+ 
+        if ret:
+            try:
+                visualized_image = utils.predict_image(frame, conf_threshold)
+            except:
+                visualized_image = frame
+            st_frame.image(visualized_image, channels = "BGR")
+            video_row.append(cv2.cvtColor(visualized_image,cv2.COLOR_BGR2RGB))
+            
+            frame_count +=1 
+            progress_bar.progress(frame_count/total_frames, text=None)
+    
+        else:
+            progress_bar.empty()
+            camera.release()
+            st_frame.empty()
+            break
+
+    clip = mpy.ImageSequenceClip(video_row, fps = fps)
+    clip.write_videofile(temp_file_2.name)
+    
+    st.video(temp_file_2.name)
