@@ -41,33 +41,44 @@ def play_video(video_source):
     fps = camera.get(cv2.CAP_PROP_FPS)
     temp_file_2 = tempfile.NamedTemporaryFile(delete=False, suffix='.mp4')
     video_row = []
-    # 전체 프레임 수 계산
+    
     total_frames = int(camera.get(cv2.CAP_PROP_FRAME_COUNT))
     progress_bar = st.progress(0)
     frame_count = 0
     st_frame = st.empty()
+    
     while camera.isOpened():
         ret, frame = camera.read()
         if ret:
             try:
-                # 예측 모델 함수 (정의되지 않은 상태로 가정)
                 visualized_image = utils.predict_image(frame, conf_threshold)
-            except:
-                visualized_image = frame
-            # BGR -> RGB로 변환 후 255로 나눠서 [0, 1] 범위로 맞춤
-            visualized_image = cv2.cvtColor(visualized_image, cv2.COLOR_BGR2RGB) / 255.0
-            # Streamlit에 이미지 표시
-            st_frame.image(visualized_image)
-            # 비디오 행렬에 변환된 프레임 추가
-            video_row.append(visualized_image)
-            # 진행 상황 표시
-            frame_count += 1
-            progress_bar.progress(frame_count / total_frames, text=None)
+
+                # visualized_image가 None인지 확인
+                if visualized_image is None:
+                    st.error("Predicted image is None.")
+                    visualized_image = frame  # 대체 이미지 사용
+
+                # BGR -> RGB로 변환 후 [0, 1] 범위로 맞춤
+                visualized_image = cv2.cvtColor(visualized_image, cv2.COLOR_BGR2RGB) / 255.0
+                
+                # Streamlit에 이미지 표시
+                st_frame.image(visualized_image)
+                
+                # 비디오 행렬에 변환된 프레임 추가
+                video_row.append(visualized_image)
+                
+                # 진행 상황 표시
+                frame_count += 1
+                progress_bar.progress(frame_count / total_frames, text=None)
+            except Exception as e:
+                st.error(f"An error occurred: {e}")
+                visualized_image = frame  # 기본 프레임 사용
         else:
             progress_bar.empty()
             camera.release()
             st_frame.empty()
             break
+
 
 # 파일 업로드 처리
 temporary_location = None
