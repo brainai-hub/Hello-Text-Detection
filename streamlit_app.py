@@ -27,7 +27,7 @@ if source_radio == "IMAGE":
         uploaded_image = PIL.Image.open(input)
         uploaded_image_cv = cv2.cvtColor(numpy.array(uploaded_image), cv2.COLOR_RGB2BGR)
         boxes, resized_image = utils.predict_image(uploaded_image_cv, conf_threshold = conf_threshold)
-        result_image = utils.convert_result_to_image(boxes, resized_image, boxes, conf_labels=False)
+        result_image = utils.convert_result_to_image(uploaded_image_cv, resized_image, boxes, conf_labels=False)
         st.image(result_image, channels = "BGR")
         st.markdown(f"<h4 style='color: blue;'><strong>The result of running the AI inference on an image:</strong></h4>", unsafe_allow_html=True)
     else: 
