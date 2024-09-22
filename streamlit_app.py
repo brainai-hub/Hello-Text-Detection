@@ -50,7 +50,7 @@ if source_radio == "VIDEO":
     if temporary_location is not None:
         play_video(temporary_location)
     else:
-        st.video("assets/sample_video.mp4")
+        st.video("data/sample_video.mp4")
         st.write("Click on 'Browse Files' in the sidebar to run inference on an video." )
 
 
