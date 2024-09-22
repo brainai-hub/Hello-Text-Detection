@@ -2,6 +2,8 @@ import streamlit as st
 import utils
 import cv2
 import numpy
+import io
+
 import PIL
 from camera_input_live import camera_input_live
 
