@@ -4,7 +4,7 @@ import numpy as np
 from pathlib import Path
 
 core = ov.Core()
-model = core.read_model(model='models/v3-small_224_1.0_float.xml')
+model = core.read_model(model='./model/horizontal-text-detection-0001.xml')
 compiled_model = core.compile_model(model = model, device_name="CPU")
 input_layer = compiled_model.input(0)
 output_layer = compiled_model.output(0)
