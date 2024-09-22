@@ -6,12 +6,12 @@ import PIL
 from camera_input_live import camera_input_live
 
 st.set_page_config(
-    page_title="Hello Image Classification",
+    page_title="Hello Text Detection",
     page_icon=":sun_with_face:",
     layout="centered",
     initial_sidebar_state="expanded",)
 
-st.title("Hello Image Classification :sun_with_face:")
+st.title("Hello Text Dection :sun_with_face:")
 
 st.sidebar.header("Type")
 source_radio = st.sidebar.radio("Select Source", ["IMAGE", "WEBCAM"])
