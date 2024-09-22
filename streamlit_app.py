@@ -30,7 +30,7 @@ if source_radio == "IMAGE":
         st.image(result_image, channels = "BGR")
         st.markdown(f"<h4 style='color: blue;'><strong>The result of running the AI inference on an image:</strong></h4>", unsafe_allow_html=True)
     else: 
-        st.image("data/coco.jpg")
+        st.image("data/intel_rnb.jpg")
         st.write("Click on 'Browse Files' in the sidebar to run inference on an image." )
         
 if source_radio == "WEBCAM":
