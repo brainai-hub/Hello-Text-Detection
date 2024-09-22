@@ -57,16 +57,25 @@ def play_video(video_source):
                 if visualized_image is None:
                     st.error("Predicted image is None.")
                     visualized_image = frame  # 대체 이미지 사용
+                
+                # NumPy 배열인지 확인
+                elif not isinstance(visualized_image, np.ndarray):
+                    st.error("Predicted image is not a valid NumPy array.")
+                    visualized_image = frame  # 대체 이미지 사용
+
+                # 데이터 형태 확인
+                else:
+                    st.write(f"Visualized image shape: {visualized_image.shape}")
 
                 # BGR -> RGB로 변환 후 [0, 1] 범위로 맞춤
-                visualized_image = cv2.cvtColor(visualized_image, cv2.COLOR_BGR2RGB) / 255.0
-                
+                if isinstance(visualized_image, np.ndarray) and visualized_image.size > 0:
+                    visualized_image = cv2.cvtColor(visualized_image, cv2.COLOR_BGR2RGB) / 255.0
+                else:
+                    st.error("Visualized image is not a valid size.")
                 # Streamlit에 이미지 표시
                 st_frame.image(visualized_image)
-                
                 # 비디오 행렬에 변환된 프레임 추가
-                video_row.append(visualized_image)
-                
+                video_row.append(visualized_image) 
                 # 진행 상황 표시
                 frame_count += 1
                 progress_bar.progress(frame_count / total_frames, text=None)
@@ -78,7 +87,6 @@ def play_video(video_source):
             camera.release()
             st_frame.empty()
             break
-
 
 # 파일 업로드 처리
 temporary_location = None
