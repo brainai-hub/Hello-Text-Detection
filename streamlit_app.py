@@ -55,7 +55,7 @@ def play_video(video_source):
                 visualized_image = utils.predict_image(frame, conf_threshold)
             except:
                 visualized_image = frame
-            st_frame.image(visualized_image, channels = "BGR")
+            st_frame.image(visualized_image, channels = "RGB")
             video_row.append(cv2.cvtColor(visualized_image,cv2.COLOR_BGR2RGB))  
             frame_count +=1 
             progress_bar.progress(frame_count/total_frames, text=None)
