@@ -41,12 +41,10 @@ def play_video(video_source):
     fps = camera.get(cv2.CAP_PROP_FPS)
     temp_file_2 = tempfile.NamedTemporaryFile(delete=False,suffix='.mp4')
     video_row=[]
-
     # frame
     total_frames = int(camera.get(cv2.CAP_PROP_FRAME_COUNT))
     progress_bar = st.progress(0)
     frame_count = 0
-    
     st_frame = st.empty()
     while(camera.isOpened()):
         ret, frame = camera.read()
@@ -55,7 +53,7 @@ def play_video(video_source):
                 visualized_image = utils.predict_image(frame, conf_threshold)
             except:
                 visualized_image = frame
-            st_frame.image(visualized_image, channels = "RGB")
+            st_frame.image(visualized_image, channels = "BGR")
             video_row.append(cv2.cvtColor(visualized_image,cv2.COLOR_BGR2RGB))  
             frame_count +=1 
             progress_bar.progress(frame_count/total_frames, text=None)
@@ -76,7 +74,6 @@ if source_radio == "VIDEO":
         with open(temporary_location, "wb") as out: 
             out.write(g.read())
         out.close() 
-
     if temporary_location is not None:
         play_video(temporary_location)
     else:
