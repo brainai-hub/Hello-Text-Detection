@@ -65,6 +65,9 @@ def play_video(video_source):
             camera.release()
             st_frame.empty()
             break
+        clip = mpy.ImageSequenceClip(video_row, fps = fps)
+        clip.write_videofile(temp_file_2.name)
+        st.video(temp_file_2.name)
 
 # 파일 업로드 처리
 temporary_location = None
@@ -92,7 +95,3 @@ if source_radio == "WEBCAM":
     boxes, resized_image = utils.predict_image(uploaded_image_cv, conf_threshold)
     visualized_image = utils.convert_result_to_image(uploaded_image_cv, resized_image, boxes, conf_labels=False)
     st.image(visualized_image, channels = "RGB")
-
-clip = mpy.ImageSequenceClip(video_row, fps = fps)
-clip.write_videofile(temp_file_2.name)
-st.video(temp_file_2.name)
