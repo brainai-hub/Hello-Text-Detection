@@ -26,7 +26,7 @@ if source_radio == "IMAGE":
     st.sidebar.header("Upload")
     input = st.sidebar.file_uploader("Choose an image.", type=("jpg", "png"))
     if input is not None:
-        uploaded_image = PIL.Image.open(input)
+        uploaded_image = Image.open(image)
         uploaded_image_cv = cv2.cvtColor(numpy.array(uploaded_image), cv2.COLOR_RGB2BGR)
         boxes, resized_image = utils.predict_image(uploaded_image_cv, conf_threshold = conf_threshold)
         result_image = utils.convert_result_to_image(uploaded_image_cv, resized_image, boxes, conf_labels=False)
@@ -35,11 +35,6 @@ if source_radio == "IMAGE":
     else: 
         st.image("data/intel_rnb.jpg")
         st.write("Click on 'Browse Files' in the sidebar to run inference on an image." )
-
-import cv2
-import tempfile
-import io
-import streamlit as st
 
 def play_video(video_source):
     camera = cv2.VideoCapture(video_source)
