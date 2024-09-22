@@ -33,7 +33,35 @@ if source_radio == "IMAGE":
     else: 
         st.image("data/intel_rnb.jpg")
         st.write("Click on 'Browse Files' in the sidebar to run inference on an image." )
-        
+
+
+temporary_location = None
+if source_radio == "VIDEO":
+
+
+    st.sidebar.header("Upload")
+    input = st.sidebar.file_uploader("Choose an video.", type=("mp4"))
+  
+    
+    if input is not None:
+
+        g = io.BytesIO(input.read())
+        temporary_location = "upload.mp4" 
+
+        with open(temporary_location, "wb") as out: 
+            out.write(g.read())
+
+        out.close() 
+
+    if temporary_location is not None:
+
+        play_video(temporary_location)
+  
+    else:
+        st.video("assets/sample_video.mp4")
+        st.write("Click on 'Browse Files' in the sidebar to run inference on an video." )
+
+
 if source_radio == "WEBCAM":
     st.sidebar.header("My Webcam Test")
     image = camera_input_live()
