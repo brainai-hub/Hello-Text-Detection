@@ -5,6 +5,7 @@ import numpy
 import io
 import tempfile
 from PIL import Image 
+import moviepy.editor as mpy
 from camera_input_live import camera_input_live
 
 st.set_page_config(
