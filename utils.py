@@ -22,6 +22,8 @@ def predict_image(image, conf_threshold):
     return boxes
 
 def convert_result_to_image(image, resized_image, boxes, threshold=0.3, conf_labels=True):
+    N, C, H, W = input_layer.shape
+    resized_image = cv2.resize(image, (W, H))
     # Define colors for boxes and descriptions.
     colors = {"red": (255, 0, 0), "green": (0, 255, 0)}
     # Fetch the image shapes to calculate a ratio.
