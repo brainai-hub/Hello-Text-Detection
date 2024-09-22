@@ -13,17 +13,15 @@ def preprocess(image, input_layer):
     N, C, H, W = input_layer.shape
     resized_image = cv2.resize(image, (W, H))
     input_image = np.expand_dims(resized_image.transpose(2, 0, 1), 0)
-    return input_image 
+    return input_image, resized_image
 
 def predict_image(image, conf_threshold):
-    input_image = preprocess(image, input_layer)
+    input_image, resized_image = preprocess(image, input_layer)
     boxes = compiled_model([input_image])[output_layer]
     boxes = boxes[~np.all(boxes == 0, axis=1)]
-    return boxes
+    return boxes, resized_image
 
 def convert_result_to_image(image, resized_image, boxes, threshold=0.3, conf_labels=True):
-    N, C, H, W = input_layer.shape
-    resized_image = cv2.resize(image, (W, H))
     # Define colors for boxes and descriptions.
     colors = {"red": (255, 0, 0), "green": (0, 255, 0)}
     # Fetch the image shapes to calculate a ratio.
